@@ -1,19 +1,16 @@
 // Basic Setup for Backend with Express and Mongoose
-
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
+const MONGODB_URI = process.env.MONGODB_URI
 
 // Middleware
-app.use(bodyParser.json());
+app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/cafeteria', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
+mongoose.connect(MONGODB_URI)
     .then(() => console.log('MongoDB connected successfully'))
     .catch((err) => console.error('MongoDB connection error:', err));
 

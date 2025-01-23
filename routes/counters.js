@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Counters
 router.get('/', async (req, res) => {
-    const counters = await Counter.find().populate('merchants');
+    const counters = await Counter.find();
     res.json(counters);
 });
 

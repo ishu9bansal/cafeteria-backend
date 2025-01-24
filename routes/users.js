@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Users
 router.get('/', async (req, res) => {
-    const users = await User.find().select('-cart').populate('counter');
+    const users = await User.find().select('-cart');
     res.json(users);
 });
 
@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('counter');
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(user);
 });
 

@@ -25,7 +25,6 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     role: { type: String, enum: ['Customer', 'Merchant', 'Admin'], required: true },
     cart: { type: [CartItemSchema] },
-    counter: { type: mongoose.Schema.Types.ObjectId, ref: 'Counter' }
 });
 const User = mongoose.model('User', UserSchema);
 

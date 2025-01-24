@@ -25,20 +25,25 @@ router.patch('/:dishId', async (req, res) => {
     const item = req.user.cart.find(item => item.dish.id === req.params.dishId);
     item.quantity += req.body.changeQuantity;
     const cart = req.user.cart;
-    await req.user.save();
-    res.json(cart);
+    try {
+        await req.user.save();
+    } catch (err) {
+        return res.status(400).json({ message: err.message });
+    }
+
+    return res.json(cart);
 });
 
 router.delete('/:dishId', async (req, res) => {
     req.user.cart = req.user.cart.filter(item => item.dish.id !== req.params.dishId);
     await req.user.save();
-    res.status(204).send();
+    res.status(200).json(req.user.cart);
 });
 
 router.delete('/', async (req, res) => {
     req.user.cart = [];
     await req.user.save();
-    res.status(204).send();
+    res.status(200).json(req.user.cart);
 });
 
 async function auth(req, res, next) {

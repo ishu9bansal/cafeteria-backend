@@ -17,9 +17,8 @@ router.post('/:dishId', async (req, res) => {
         return res.status(400).json({ message: "item already added" });
     }
     req.user.cart.push({ dish: req.params.dishId, quantity: 1 });
-    const cart = req.user.cart;
-    await req.user.save();
-    res.status(201).json(cart);
+    await req.user.save().then(u => u.populate('cart.dish'));
+    res.status(201).json(req.user.cart);
 });
 
 router.patch('/:dishId', async (req, res) => {

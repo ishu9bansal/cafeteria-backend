@@ -11,7 +11,11 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const dish = new Dish(req.body);
-    await dish.save();
+    try {
+        await dish.save();
+    } catch (err) {
+        return res.status(400).json({ message: err.message });
+    }
     res.status(201).json(dish);
 });
 

@@ -47,9 +47,15 @@ router.delete('/', async (req, res) => {
 });
 
 async function auth(req, res, next) {
-    const id = '6792087229a93e1316c7f1da';  // TODO: extract from token
-    req.user = await User.findById(id).populate('cart.dish');
-    next();
+    // const id = req.cookies.token;
+    const id = '6792087229a93e1316c7f1da';
+    const user = await User.findById(id).populate('cart.dish');
+    if (user) {
+        req.user = user;
+        next();
+    } else {
+        res.status(404).json({ message: "User not found!" });
+    }
 }
 
 module.exports = router;

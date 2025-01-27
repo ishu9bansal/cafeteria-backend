@@ -6,12 +6,12 @@ async function auth(req, res, next) {
         req.user = await User.findById(id).populate('cart.dish');
     } catch (err) {
         console.error(err);
-        res.status(400).json({ message: "Please login to continue!" });
+        return res.status(400).json({ message: "Please login to continue!" });
     }
     if (req.user) {
         next();
     } else {
-        res.status(404).json({ message: "User not found!" });
+        return res.status(404).json({ message: "User not found!" });
     }
 }
 

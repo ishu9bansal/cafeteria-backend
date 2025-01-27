@@ -6,7 +6,10 @@ const router = express.Router();
 router.post('/login', async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
-    const userId = user?._id || ""
+    if (!user) {
+        return res.status(400).json({ message: "User not found" });
+    }
+    const userId = user._id;
     res.json({ token: "", refreshToken: "", userId });
 });
 

@@ -3,18 +3,23 @@ const Dish = require('../models/dish');
 
 const router = express.Router();
 
-// Dishes
 router.get('/', async (req, res) => {
-    const { counter } = req.query;
-    const filter = counter ? { counter } : undefined;
-    const dishes = await Dish.find(filter).populate('counter');
-    res.json(dishes);
+    try {
+        const dishes = await Dish.find({ counter: req.counter._id });
+        return res.json(dishes);
+    } catch (err) {
+        return res.status(400).json({ message: err.message });
+    }
 });
 
-// router.use(canEditDishes);
-
 router.post('/', async (req, res) => {
-    const dish = new Dish(req.body);
+    const { name, price, inStock } = req.body;
+    const dish = new Dish({
+        name,
+        price,
+        inStock,
+        counter: req.counter._id,
+    });
     try {
         await dish.save();
     } catch (err) {
@@ -24,13 +29,22 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-    const dish = await Dish.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(dish);
+    const { name, price, inStock } = req.body;
+    try {
+        const dish = await Dish.findByIdAndUpdate(req.params.id, { name, price, inStock }, { new: true });
+        return res.json(dish);
+    } catch (err) {
+        return res.status(400).json({ message: err.message });
+    }
 });
 
 router.delete('/:id', async (req, res) => {
-    await Dish.findByIdAndDelete(req.params.id);
-    res.status(204).send();
+    try {
+        await Dish.findByIdAndDelete(req.params.id);
+        return res.status(204).send();
+    } catch (err) {
+        return res.status(400).json({ message: err.message });
+    }
 });
 
 module.exports = router;

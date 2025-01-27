@@ -10,6 +10,9 @@ const counterRouter = require('./routes/counters');
 const cartRouter = require('./routes/cart');
 const authRouter = require('./routes/auth');
 const { auth } = require('./middleware/auth');
+const { populateCounter } = require('./middleware/counter');
+const { authCounter } = require('./middleware/permissions');
+const Dish = require('./models/dish');
 
 const app = express();
 
@@ -23,9 +26,17 @@ app.use('/auth', authRouter);
 app.use(auth);
 
 app.use('/users', userRouter);
-app.use('/dishes', dishRouter);
 app.use('/counters', counterRouter);
 app.use('/cart', cartRouter);
+app.use('/counter/:counterId', populateCounter, authCounter, dishRouter)
+
+// Dishes for home page
+app.get('/dishes', async (req, res) => {
+    const { counter } = req.query;
+    const filter = counter ? { counter } : undefined;
+    const dishes = await Dish.find(filter).populate('counter');
+    res.json(dishes);
+});
 
 // Start the Server
 const PORT = process.env.PORT;

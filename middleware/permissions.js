@@ -7,6 +7,14 @@ function checkRole(...roles) {
     };
 }
 
+function authCounter(req, res, next) {
+    if (!req.counter.merchants.includes(req.user._id)) {
+        return res.status(403).json({ message: "Unauthorized access!" });
+    }
+    next();
+}
+
 module.exports = {
     checkRole,
+    authCounter,
 };

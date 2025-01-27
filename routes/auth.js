@@ -17,4 +17,8 @@ router.post('/register', async (req, res) => {
     res.status(201).json(user);
 });
 
+router.delete('/logout', async (req, res) => {
+    res.status(204).json({ message: 'user logged out' });
+});
+
 module.exports = router;

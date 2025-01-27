@@ -11,6 +11,8 @@ router.get('/', async (req, res) => {
     res.json(dishes);
 });
 
+// router.use(canEditDishes);
+
 router.post('/', async (req, res) => {
     const dish = new Dish(req.body);
     try {

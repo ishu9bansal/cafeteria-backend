@@ -30,7 +30,6 @@ router.patch('/:dishId', async (req, res) => {
     try {
         await req.user.save();
     } catch (err) {
-        console.error(err);
         return res.status(400).json({ message: err.message });
     }
 

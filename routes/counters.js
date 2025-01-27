@@ -1,5 +1,7 @@
 const express = require('express');
 const Counter = require('../models/counter');
+const { checkRole } = require('../middleware/permissions');
+const { ROLE } = require('../constants');
 
 const router = express.Router();
 
@@ -10,6 +12,8 @@ router.get('/', async (req, res) => {
     const counters = await Counter.find(filter).populate('merchants');
     res.json(counters);
 });
+
+router.use(checkRole(ROLE.Admin));
 
 router.post('/', async (req, res) => {
     const counter = new Counter(req.body);

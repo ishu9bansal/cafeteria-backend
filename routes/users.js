@@ -1,8 +1,12 @@
 const express = require('express');
 const User = require('../models/user');
 const Counter = require('../models/counter');
+const { checkRole } = require('../middleware/permissions');
+const { ROLE } = require('../constants');
 
 const router = express.Router();
+
+router.use(checkRole(ROLE.Admin));
 
 // Users
 router.get('/', async (req, res) => {

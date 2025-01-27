@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Dish = require('./dish');
+const { ROLE } = require('../constants');
 
 const CartItemSchema = new mongoose.Schema({
     dish: {
@@ -10,7 +11,7 @@ const CartItemSchema = new mongoose.Schema({
             validator: async function (dishId) {
                 return await Dish.exists({ _id: dishId, inStock: true });
             },
-            message: 'Invalid Cart!'
+            message: 'Invalid Cart! Please empty your cart.'
         }
     },
     quantity: {
@@ -23,7 +24,7 @@ const CartItemSchema = new mongoose.Schema({
 const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    role: { type: String, enum: ['Customer', 'Merchant', 'Admin'], required: true },
+    role: { type: String, enum: Object.keys(ROLE), required: true },
     cart: { type: [CartItemSchema] },
 });
 const User = mongoose.model('User', UserSchema);

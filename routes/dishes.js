@@ -5,7 +5,9 @@ const router = express.Router();
 
 // Dishes
 router.get('/', async (req, res) => {
-    const dishes = await Dish.find().populate('counter');
+    const { counter } = req.query;
+    const filter = counter ? { counter } : undefined;
+    const dishes = await Dish.find(filter).populate('counter');
     res.json(dishes);
 });
 

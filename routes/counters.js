@@ -5,7 +5,9 @@ const router = express.Router();
 
 // Counters
 router.get('/', async (req, res) => {
-    const counters = await Counter.find().populate('merchants');
+    const { merchants } = req.query;
+    const filter = merchants ? { merchants } : undefined;
+    const counters = await Counter.find(filter).populate('merchants');
     res.json(counters);
 });
 

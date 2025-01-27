@@ -47,11 +47,13 @@ router.delete('/', async (req, res) => {
 });
 
 async function auth(req, res, next) {
-    // const id = req.cookies.token;
-    const id = '6792087229a93e1316c7f1da';
-    const user = await User.findById(id).populate('cart.dish');
-    if (user) {
-        req.user = user;
+    const id = req.headers['x-userid'];
+    try {
+        req.user = await User.findById(id).populate('cart.dish');
+    } catch (err) {
+        res.status(400).json({ message: "Please login to continue!" });
+    }
+    if (req.user) {
         next();
     } else {
         res.status(404).json({ message: "User not found!" });

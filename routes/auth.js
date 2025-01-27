@@ -6,8 +6,8 @@ const router = express.Router();
 router.post('/login', async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
-    res.cookie('token', user?._id || "", { maxAge: 60000 });
-    res.json({ token: user._id, refreshToken: "" });
+    const userId = user?._id || ""
+    res.json({ token: "", refreshToken: "", userId });
 });
 
 router.post('/register', async (req, res) => {

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Dish = require('./dish');
 
 const CartItemSchema = new mongoose.Schema({
     dish: {
@@ -7,10 +8,9 @@ const CartItemSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator: async function (dishId) {
-                const dishExists = await mongoose.model('Dish').exists({ _id: dishId });
-                return dishExists;
+                return await Dish.exists({ _id: dishId, inStock: true });
             },
-            message: 'Invalid dish reference.'
+            message: 'Invalid Cart!'
         }
     },
     quantity: {

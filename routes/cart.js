@@ -14,7 +14,12 @@ router.post('/:dishId', async (req, res) => {
         return res.status(400).json({ message: "item already added" });
     }
     req.user.cart.push({ dish: req.params.dishId, quantity: 1 });
-    await req.user.save().then(u => u.populate('cart.dish'));
+    try {
+        await req.user.save().then(u => u.populate('cart.dish'));
+    } catch (err) {
+        return res.status(400).json({ message: err.message });
+    }
+
     res.status(201).json(req.user.cart);
 });
 
@@ -25,6 +30,7 @@ router.patch('/:dishId', async (req, res) => {
     try {
         await req.user.save();
     } catch (err) {
+        console.error(err);
         return res.status(400).json({ message: err.message });
     }
 
@@ -33,13 +39,21 @@ router.patch('/:dishId', async (req, res) => {
 
 router.delete('/:dishId', async (req, res) => {
     req.user.cart = req.user.cart.filter(item => item.dish.id !== req.params.dishId);
-    await req.user.save();
+    try {
+        await req.user.save();
+    } catch (err) {
+        return res.status(400).json({ message: err.message });
+    }
     res.status(200).json(req.user.cart);
 });
 
 router.delete('/', async (req, res) => {
     req.user.cart = [];
-    await req.user.save();
+    try {
+        await req.user.save();
+    } catch (err) {
+        return res.status(400).json({ message: err.message });
+    }
     res.status(200).json(req.user.cart);
 });
 

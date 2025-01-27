@@ -1,9 +1,6 @@
 const express = require('express');
-const User = require('../models/user');
 
 const router = express.Router();
-
-router.use(auth);
 
 // Cart
 router.get('/', async (req, res) => {   // also fetch user details
@@ -45,19 +42,5 @@ router.delete('/', async (req, res) => {
     await req.user.save();
     res.status(200).json(req.user.cart);
 });
-
-async function auth(req, res, next) {
-    const id = req.headers['x-userid'];
-    try {
-        req.user = await User.findById(id).populate('cart.dish');
-    } catch (err) {
-        res.status(400).json({ message: "Please login to continue!" });
-    }
-    if (req.user) {
-        next();
-    } else {
-        res.status(404).json({ message: "User not found!" });
-    }
-}
 
 module.exports = router;

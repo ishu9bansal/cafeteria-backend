@@ -10,24 +10,19 @@ router.use(checkRole(ROLE.Admin));
 
 // Users
 router.get('/', async (req, res) => {
-    const users = await User.find().select('-cart');
+    const users = await User.find().select('-cart -password');
     res.json(users);
 });
 
 router.get('/:id', async (req, res) => {    // TODO: add counters
-    const user = await User.findById(req.params.id).select('-cart');
+    const user = await User.findById(req.params.id).select('-cart -password');
     const counters = await Counter.find({ merchants: req.params.id });
     res.json({ user, counters });
 });
 
-router.post('/', async (req, res) => {
-    const user = new User(req.body);
-    await user.save();
-    res.status(201).json(user);
-});
-
 router.put('/:id', async (req, res) => {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { role } = req.body;
+    const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true });
     res.json(user);
 });
 

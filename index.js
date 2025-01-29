@@ -13,6 +13,7 @@ const { auth } = require('./middleware/auth');
 const { populateCounter } = require('./middleware/counter');
 const { authCounter } = require('./middleware/permissions');
 const Dish = require('./models/dish');
+const Counter = require('./models/counter');
 
 const app = express();
 
@@ -32,10 +33,11 @@ app.use('/counter/:counterId', populateCounter, authCounter, dishRouter)
 
 // Dishes for home page
 app.get('/dishes', async (req, res) => {
-    const { counter } = req.query;
-    const filter = counter ? { counter } : undefined;
+    const { counter: counterId } = req.query;
+    const counter = counterId ? (await Counter.findById(counterId)) : undefined;
+    const filter = counterId ? { counter: counterId } : undefined;
     const dishes = await Dish.find(filter).populate('counter');
-    res.json(dishes);
+    res.json({ dishes, counter });
 });
 
 // Start the Server

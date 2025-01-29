@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     try {
         const dishes = await Dish.find({ counter: req.counter._id });
-        return res.json(dishes);
+        return res.json({ dishes, counter: req.counter });
     } catch (err) {
         return res.status(400).json({ message: err.message });
     }

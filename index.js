@@ -36,7 +36,7 @@ app.get('/dishes', async (req, res) => {
     const { counter: counterId } = req.query;
     const counter = counterId ? (await Counter.findById(counterId)) : undefined;
     const filter = counterId ? { counter: counterId } : undefined;
-    const dishes = await Dish.find(filter).populate('counter');
+    const dishes = await Dish.find(filter);
     res.json({ dishes, counter });
 });
 

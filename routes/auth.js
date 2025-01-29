@@ -16,7 +16,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: "Username not registered!" });
         }
 
-        const passwordMatched = true || await bcrypt.compare(password, user.password);
+        const passwordMatched = await bcrypt.compare(password, user.password);
 
         if (passwordMatched) {
             const userInfo = { userId: user._id };
@@ -73,7 +73,7 @@ router.delete('/logout', async (req, res) => {
 });
 
 function generateAccessToken(userInfo) {
-    return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' });
+    return jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
 }
 
 module.exports = router;

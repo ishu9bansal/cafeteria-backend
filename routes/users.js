@@ -10,7 +10,15 @@ router.use(checkRole(ROLE.Admin));
 
 // Users
 router.get('/', async (req, res) => {
-    const users = await User.find().select('-cart -password');
+    const { search, role } = req.query;
+    const filter = {};
+    if (search) {
+        filter.$text = { $search: search };
+    }
+    if (role) {
+        filter.role = role;
+    }
+    const users = await User.find(filter).select('-cart -password');
     res.json(users);
 });
 

@@ -28,6 +28,7 @@ const UserSchema = new mongoose.Schema({
     role: { type: String, enum: Object.keys(ROLE), required: true },
     cart: { type: [CartItemSchema] },
 });
+UserSchema.index({ name: 'text', email: 'text' });
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

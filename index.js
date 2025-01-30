@@ -24,14 +24,7 @@ app.use(cookieParser());
 
 app.use('/auth', authRouter);
 
-app.use(auth);
-
-app.use('/users', userRouter);
-app.use('/counters', counterRouter);
-app.use('/cart', cartRouter);
-app.use('/counter/:counterId', populateCounter, authCounter, dishRouter)
-
-// Dishes for home page
+// Dishes for home page, without auth
 app.get('/dishes', async (req, res) => {
     const { counter: counterId } = req.query;
     const counter = counterId ? (await Counter.findById(counterId)) : undefined;
@@ -39,6 +32,15 @@ app.get('/dishes', async (req, res) => {
     const dishes = await Dish.find(filter);
     res.json({ dishes, counter });
 });
+
+app.use(auth);
+
+app.use('/users', userRouter);
+app.use('/counters', counterRouter);
+app.use('/cart', cartRouter);
+app.use('/counter/:counterId', populateCounter, authCounter, dishRouter)
+
+
 
 // Start the Server
 const PORT = process.env.PORT;

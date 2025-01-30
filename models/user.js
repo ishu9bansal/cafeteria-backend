@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema({
     cart: { type: [CartItemSchema] },
 });
 UserSchema.index({ name: 'text', email: 'text' });
+UserSchema.pre('validate', async function (next) {
+    this.cart = this.cart.filter(item => item.dish);
+    next();
+});
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

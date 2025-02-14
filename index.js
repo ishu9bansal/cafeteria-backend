@@ -6,6 +6,7 @@ require('./config/connection');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser')
+const morgan = require('morgan');
 const userRouter = require('./routes/users');
 const dishRouter = require('./routes/dishes');
 const counterRouter = require('./routes/counters');
@@ -20,8 +21,11 @@ const Counter = require('./models/counter');
 const app = express();
 
 // Middleware
+app.use(morgan('combined'));
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: true,
+}));
 app.use(cookieParser());
 
 app.use('/auth', authRouter);
@@ -47,5 +51,5 @@ app.use('/counter/:counterId', populateCounter, authCounter, dishRouter)
 // Start the Server
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on PORT: ${PORT}`);
 });
